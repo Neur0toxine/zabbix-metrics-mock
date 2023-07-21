@@ -63,8 +63,18 @@ func handleConnection(conn net.Conn) {
 		return
 	}
 
+	respData, err := Response{
+		Response: "success",
+		Info: fmt.Sprintf("processed: %d; failed: 0; total: %d; seconds spent: 0.01235813",
+			len(packet.Data), len(packet.Data)),
+	}.Packet()
+	if err != nil {
+		log.Printf("error: %s", err)
+		return
+	}
+
 	// `log` package is redundant here; we already have a timestamp from packet data.
 	fmt.Println(packet.String())
-	conn.Write([]byte(""))
+	conn.Write(respData)
 	conn.Close()
 }
